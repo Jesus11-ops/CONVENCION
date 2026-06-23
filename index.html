@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convención Zonal Sahagún - Acceso</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">✝️</div>
+      <h1>Convención Zonal</h1>
+      <p class="logo-sub">Zona Sahagún · IPUC</p>
+    </div>
+
+    <div class="login-form">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" id="email" placeholder="correo@ejemplo.com" autocomplete="email">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter') login()">
+      </div>
+      <button class="btn-login" onclick="login()">Ingresar al sistema</button>
+    </div>
+
+    <!-- Solo admin ve esto -->
+    <div class="crear-link">
+      <button class="btn-text" onclick="toggleCrear()">+ Crear usuario nuevo</button>
+    </div>
+
+    <div id="createUserBox" style="display:none" class="create-box">
+      <h4>Crear usuario (máximo 3)</h4>
+      <div class="form-group">
+        <label>Correo nuevo</label>
+        <input type="email" id="newEmail" placeholder="correo@ejemplo.com">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="newPassword" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div class="btn-row">
+        <button onclick="crearUsuario()">Crear usuario</button>
+        <button class="btn-cancel" onclick="toggleCrear()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="login-footer">Iglesia Pentecostal Unida de Colombia · v1.0</p>
+</div>
+
+<script type="module" src="auth.js"></script>
+</body>
+</html>

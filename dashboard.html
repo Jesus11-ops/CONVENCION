@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control Financiero · Convención Zonal Sahagún</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container header-inner">
+    <div class="header-brand">
+      <span class="header-icon">✝️</span>
+      <div>
+        <h1>Convención Zonal Sahagún</h1>
+        <p class="header-sub">Control Financiero · IPUC</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="rolBadge" class="rol-badge"></span>
+      <button class="btn-cerrar" onclick="cerrarSesion()">Salir</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ===== RESUMEN FINANCIERO ===== -->
+  <section class="resumen-section">
+    <div class="resumen-grid">
+      <div class="resumen-box ingreso-box">
+        <div class="resumen-icon">💵</div>
+        <div class="resumen-label">Total Ingresos</div>
+        <div class="resumen-value" id="totalIngresos">$0</div>
+        <div class="resumen-sub" id="cntIngresos">0 registros</div>
+      </div>
+      <div class="resumen-box egreso-box">
+        <div class="resumen-icon">💸</div>
+        <div class="resumen-label">Total Egresos</div>
+        <div class="resumen-value" id="totalEgresos">$0</div>
+        <div class="resumen-sub" id="cntEgresos">0 registros</div>
+      </div>
+      <div class="resumen-box saldo-box">
+        <div class="resumen-icon">⚖️</div>
+        <div class="resumen-label">Saldo Disponible</div>
+        <div class="resumen-value" id="saldoDisponible">$0</div>
+        <div class="resumen-sub">Ingresos – Egresos</div>
+      </div>
+    </div>
+
+    <!-- Desglose ingresos por rubro -->
+    <div class="desglose-panel">
+      <h3 class="desglose-title">📊 Desglose de Ingresos por Rubro</h3>
+      <div id="desgloseIngresos" class="desglose-grid">
+        <!-- Generado dinámicamente -->
+      </div>
+    </div>
+
+    <!-- Comparativo presupuesto vs real -->
+    <div class="comparativo-panel" id="comparativoPanel">
+      <h3 class="desglose-title">📈 Presupuesto vs Real</h3>
+      <div id="comparativoEgresos" class="comparativo-grid">
+        <!-- Generado dinámicamente -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FORMULARIO INGRESO (solo admin) ===== -->
+  <section class="card form-section" id="seccionIngreso" style="display:none">
+    <h2 class="section-title">💵 Registrar Ingreso</h2>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>📅 Fecha</label>
+        <input type="date" id="ingresoFecha">
+      </div>
+      <div class="form-group">
+        <label>📂 Rubro de Ingreso</label>
+        <select id="ingresoRubro">
+          <option value="">— Seleccione —</option>
+          <option value="Aporte Zonal">Aporte Zonal (creyentes)</option>
+          <option value="Ofrendas">Ofrendas</option>
+          <option value="Aportes Pastores">Aportes Pastores</option>
+          <option value="Culto Lanzamiento">Culto Lanzamiento</option>
+          <option value="Varios">Varios</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>🏛️ Congregación / Persona</label>
+        <input type="text" id="ingresoCongregacion" placeholder="Ej: Congregación Central, Pastor Pérez...">
+      </div>
+      <div class="form-group">
+        <label>💰 Monto</label>
+        <input type="text" id="ingresoMonto" placeholder="0" inputmode="numeric">
+        <input type="hidden" id="ingresoMontoValue">
+      </div>
+      <div class="form-group full-col">
+        <label>📝 Observación (opcional)</label>
+        <input type="text" id="ingresoObservacion" placeholder="Detalle adicional...">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" onclick="guardarIngreso()">💾 Guardar Ingreso</button>
+      <button class="btn-export" onclick="exportarExcel()">📊 Exportar Excel</button>
+    </div>
+  </section>
+
+  <!-- ===== FORMULARIO EGRESO (solo admin) ===== -->
+  <section class="card form-section" id="seccionEgreso" style="display:none">
+    <h2 class="section-title egreso-title">💸 Registrar Egreso</h2>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>📅 Fecha</label>
+        <input type="date" id="egresoFecha">
+      </div>
+      <div class="form-group">
+        <label>📂 Concepto del Egreso</label>
+        <select id="egresoConcepto">
+          <option value="">— Seleccione —</option>
+          <optgroup label="Gerencias">
+            <option value="Gerencia General">Gerencia General</option>
+            <option value="Gerencia Ejecutiva">Gerencia Ejecutiva</option>
+            <option value="Gerencia Administrativa">Gerencia Administrativa</option>
+          </optgroup>
+          <optgroup label="Ministerios">
+            <option value="Predicadores">Predicadores</option>
+            <option value="Sonido">Sonido</option>
+            <option value="Músicos Invitados">Músicos Invitados</option>
+            <option value="Espiritual">Espiritual</option>
+            <option value="Música">Música</option>
+          </optgroup>
+          <optgroup label="Logística">
+            <option value="Logística y Trasteo">Logística y Trasteo</option>
+            <option value="Alimentación">Alimentación</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Vigilancia">Vigilancia</option>
+            <option value="Ujieres y Recepción">Ujieres y Recepción</option>
+          </optgroup>
+          <optgroup label="Comunicaciones">
+            <option value="Publicidad y Decoración">Publicidad y Decoración</option>
+            <option value="Decoración">Decoración</option>
+          </optgroup>
+          <optgroup label="Otros">
+            <option value="Relaciones Públicas">Relaciones Públicas</option>
+            <option value="Aseo">Aseo</option>
+            <option value="SEPRI">SEPRI</option>
+            <option value="Electricidad">Electricidad</option>
+            <option value="Finanzas">Finanzas</option>
+            <option value="Silletería">Silletería</option>
+            <option value="Imprevistos">Imprevistos</option>
+            <option value="Otro">Otro (especificar)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group" id="grupoOtroConcepto" style="display:none">
+        <label>✏️ Especificar concepto</label>
+        <input type="text" id="egresoOtro" placeholder="Describe el egreso">
+      </div>
+      <div class="form-group">
+        <label>💵 Monto</label>
+        <input type="text" id="egresoMonto" placeholder="0" inputmode="numeric">
+        <input type="hidden" id="egresoMontoValue">
+      </div>
+      <div class="form-group full-col">
+        <label>📝 Descripción (opcional)</label>
+        <input type="text" id="egresoDescripcion" placeholder="Detalle adicional...">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-egreso" onclick="guardarEgreso()">💸 Guardar Egreso</button>
+    </div>
+  </section>
+
+  <!-- ===== TABS ===== -->
+  <div class="tabs-container">
+    <button class="tab-btn active" data-tab="ingresos" onclick="cambiarTab('ingresos')">💵 Ingresos</button>
+    <button class="tab-btn" data-tab="egresos" onclick="cambiarTab('egresos')">💸 Egresos</button>
+  </div>
+
+  <!-- Lista Ingresos -->
+  <section id="tabIngresos" class="lista-section">
+    <div id="listaIngresos" class="registros-grid">
+      <p class="empty-msg">Cargando registros...</p>
+    </div>
+  </section>
+
+  <!-- Lista Egresos -->
+  <section id="tabEgresos" class="lista-section" style="display:none">
+    <div id="listaEgresos" class="registros-grid">
+      <p class="empty-msg">Cargando registros...</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="container">
+    Iglesia Pentecostal Unida de Colombia · Convención Zonal Sahagún · v1.0
+  </div>
+</footer>
+
+<script type="module" src="app.js"></script>
+<script type="module" src="exportar.js"></script>
+</body>
+</html>
