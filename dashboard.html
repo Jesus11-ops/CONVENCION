@@ -12,7 +12,7 @@
 <header>
   <div class="container header-inner">
     <div class="header-brand">
-      <span class="header-icon">✝️</span>
+      <span class="header-icon"></span>
       <div>
         <h1>Convención Zonal Sahagún</h1>
         <p class="header-sub">Control Financiero · IPUC</p>
@@ -83,6 +83,9 @@
           <option value="Ofrendas">Ofrendas</option>
           <option value="Aportes Pastores">Aportes Pastores</option>
           <option value="Culto Lanzamiento">Culto Lanzamiento</option>
+          <option value="Donación Nacional">Donación Nacional</option>
+          <option value="Aporte Congregación">Aporte Congregación</option>
+          <option value="Donación">Donación</option>
           <option value="Varios">Varios</option>
         </select>
       </div>
@@ -194,6 +197,105 @@
 
 </main>
 
+<!-- ===== MODAL EDITAR INGRESO ===== -->
+<div id="modalEditarIngreso" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <h3 class="section-title">✏️ Editar Ingreso</h3>
+    <div class="form-group">
+      <label>📂 Rubro de Ingreso</label>
+      <select id="editIngresoRubro">
+        <option value="Aporte Zonal">Aporte Zonal (creyentes)</option>
+        <option value="Ofrendas">Ofrendas</option>
+        <option value="Aportes Pastores">Aportes Pastores</option>
+        <option value="Culto Lanzamiento">Culto Lanzamiento</option>
+        <option value="Donación Nacional">Donación Nacional</option>
+        <option value="Aporte Congregación">Aporte Congregación</option>
+        <option value="Donación">Donación</option>
+        <option value="Varios">Varios</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>🏛️ Congregación / Persona</label>
+      <input type="text" id="editIngresoCongregacion">
+    </div>
+    <div class="form-group">
+      <label>💰 Monto</label>
+      <input type="text" id="editIngresoMonto" inputmode="numeric">
+      <input type="hidden" id="editIngresoMontoValue">
+    </div>
+    <div class="form-group">
+      <label>📝 Observación</label>
+      <input type="text" id="editIngresoObservacion">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="guardarEdicionIngreso()">💾 Guardar cambios</button>
+      <button class="btn-cancel" onclick="cerrarModalIngreso()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL EDITAR EGRESO ===== -->
+<div id="modalEditarEgreso" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <h3 class="section-title egreso-title">✏️ Editar Egreso</h3>
+    <div class="form-group">
+      <label>📂 Concepto del Egreso</label>
+      <select id="editEgresoConcepto">
+        <optgroup label="Gerencias">
+          <option value="Gerencia General">Gerencia General</option>
+          <option value="Gerencia Ejecutiva">Gerencia Ejecutiva</option>
+          <option value="Gerencia Administrativa">Gerencia Administrativa</option>
+        </optgroup>
+        <optgroup label="Ministerios">
+          <option value="Predicadores">Predicadores</option>
+          <option value="Sonido">Sonido</option>
+          <option value="Músicos Invitados">Músicos Invitados</option>
+          <option value="Espiritual">Espiritual</option>
+          <option value="Música">Música</option>
+        </optgroup>
+        <optgroup label="Logística">
+          <option value="Logística y Trasteo">Logística y Trasteo</option>
+          <option value="Alimentación">Alimentación</option>
+          <option value="Hotel">Hotel</option>
+          <option value="Vigilancia">Vigilancia</option>
+          <option value="Ujieres y Recepción">Ujieres y Recepción</option>
+        </optgroup>
+        <optgroup label="Comunicaciones">
+          <option value="Publicidad y Decoración">Publicidad y Decoración</option>
+          <option value="Decoración">Decoración</option>
+        </optgroup>
+        <optgroup label="Otros">
+          <option value="Relaciones Públicas">Relaciones Públicas</option>
+          <option value="Aseo">Aseo</option>
+          <option value="SEPRI">SEPRI</option>
+          <option value="Electricidad">Electricidad</option>
+          <option value="Finanzas">Finanzas</option>
+          <option value="Silletería">Silletería</option>
+          <option value="Imprevistos">Imprevistos</option>
+          <option value="Otro">Otro (especificar)</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="form-group" id="editGrupoOtroConcepto" style="display:none">
+      <label>✏️ Especificar concepto</label>
+      <input type="text" id="editEgresoOtro" placeholder="Describe el egreso">
+    </div>
+    <div class="form-group">
+      <label>💵 Monto</label>
+      <input type="text" id="editEgresoMonto" inputmode="numeric">
+      <input type="hidden" id="editEgresoMontoValue">
+    </div>
+    <div class="form-group">
+      <label>📝 Descripción</label>
+      <input type="text" id="editEgresoDescripcion">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-egreso" onclick="guardarEdicionEgreso()">💾 Guardar cambios</button>
+      <button class="btn-cancel" onclick="cerrarModalEgreso()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
 <footer>
   <div class="container">
     Iglesia Pentecostal Unida de Colombia · Convención Zonal Sahagún · v1.0
@@ -204,3 +306,5 @@
 <script type="module" src="exportar.js"></script>
 </body>
 </html>
+
+  

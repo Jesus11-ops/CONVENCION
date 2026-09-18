@@ -54,11 +54,14 @@ const PRESUPUESTO_EGRESOS = {
 };
 
 const PRESUPUESTO_INGRESOS = {
-  "Aporte Zonal":    5000000,
-  "Ofrendas":        6545000,
-  "Aportes Pastores":1900000,
-  "Culto Lanzamiento":1000000,
-  "Varios":           700000,
+  "Aporte Zonal":         5000000,
+  "Ofrendas":             6545000,
+  "Aportes Pastores":     1900000,
+  "Culto Lanzamiento":    1000000,
+  "Donación Nacional":          0,
+  "Aporte Congregación":        0,
+  "Donación":                   0,
+  "Varios":                700000,
 };
 
 // ===== ESTADO GLOBAL =====
@@ -135,6 +138,8 @@ function aplicarFormateo(inputId, hiddenId) {
 window.addEventListener("DOMContentLoaded", () => {
   aplicarFormateo("ingresoMonto",  "ingresoMontoValue");
   aplicarFormateo("egresoMonto",   "egresoMontoValue");
+  aplicarFormateo("editIngresoMonto", "editIngresoMontoValue");
+  aplicarFormateo("editEgresoMonto",  "editEgresoMontoValue");
 
   // Fecha por defecto
   ["ingresoFecha", "egresoFecha"].forEach(id => {
@@ -142,7 +147,7 @@ window.addEventListener("DOMContentLoaded", () => {
     if (el) el.value = new Date().toISOString().split("T")[0];
   });
 
-  // Mostrar campo "Otro" en egresos
+  // Mostrar campo "Otro" en egresos (formulario principal)
   const selectConcepto = document.getElementById("egresoConcepto");
   if (selectConcepto) {
     selectConcepto.addEventListener("change", function () {
@@ -152,6 +157,27 @@ window.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Mostrar campo "Otro" en egresos (modal de edición)
+  const selectEditConcepto = document.getElementById("editEgresoConcepto");
+  if (selectEditConcepto) {
+    selectEditConcepto.addEventListener("change", function () {
+      const grupoOtro = document.getElementById("editGrupoOtroConcepto");
+      if (grupoOtro) {
+        grupoOtro.style.display = this.value === "Otro" ? "block" : "none";
+      }
+    });
+  }
+
+  // Cerrar modales haciendo clic fuera de la caja
+  ["modalEditarIngreso", "modalEditarEgreso"].forEach(id => {
+    const overlay = document.getElementById(id);
+    if (overlay) {
+      overlay.addEventListener("click", e => {
+        if (e.target === overlay) overlay.style.display = "none";
+      });
+    }
+  });
 });
 
 // ===== TABS =====
@@ -443,7 +469,9 @@ function limpiarFormEgreso() {
   if (document.getElementById("egresoOtro")) document.getElementById("egresoOtro").value = "";
 }
 
-// ===== EDITAR =====
+// ===== EDITAR INGRESO (modal) =====
+let idIngresoEnEdicion = null;
+
 window.editarIngreso = async function (id) {
   if (!esAdmin) return;
   try {
@@ -451,19 +479,48 @@ window.editarIngreso = async function (id) {
     if (!snap.exists()) { alert("❌ No encontrado"); return; }
     const d = snap.data();
 
-    const monto = prompt("Monto:", d.monto);
-    if (monto === null) return;
-    const congregacion = prompt("Congregación / Persona:", d.congregacion || "");
-    if (congregacion === null) return;
-    const observacion = prompt("Observación:", d.observacion || "");
-    if (observacion === null) return;
+    idIngresoEnEdicion = id;
+    document.getElementById("editIngresoRubro").value        = d.rubro || "";
+    document.getElementById("editIngresoCongregacion").value = d.congregacion || "";
+    document.getElementById("editIngresoObservacion").value  = d.observacion || "";
 
-    await updateDoc(doc(db, "Ingresos", id), {
-      monto: Number(monto), congregacion: congregacion.trim(), observacion: observacion.trim()
-    });
-    alert("✅ Ingreso actualizado");
+    const montoInput = document.getElementById("editIngresoMonto");
+    montoInput.value = Number(d.monto || 0).toLocaleString("es-CO");
+    document.getElementById("editIngresoMontoValue").value = d.monto || 0;
+
+    document.getElementById("modalEditarIngreso").style.display = "flex";
   } catch (err) { alert("❌ Error: " + err.message); }
 };
+
+window.cerrarModalIngreso = function () {
+  document.getElementById("modalEditarIngreso").style.display = "none";
+  idIngresoEnEdicion = null;
+};
+
+window.guardarEdicionIngreso = async function () {
+  if (!idIngresoEnEdicion) return;
+
+  const rubro        = document.getElementById("editIngresoRubro").value;
+  const congregacion = document.getElementById("editIngresoCongregacion").value.trim();
+  const monto         = Number(document.getElementById("editIngresoMontoValue").value);
+  const observacion   = document.getElementById("editIngresoObservacion").value.trim();
+
+  if (!rubro)     { alert("⚠️ Seleccione el rubro"); return; }
+  if (monto <= 0) { alert("⚠️ Ingrese un monto válido"); return; }
+
+  try {
+    await updateDoc(doc(db, "Ingresos", idIngresoEnEdicion), {
+      rubro, congregacion, monto, observacion
+    });
+    alert("✅ Ingreso actualizado");
+    window.cerrarModalIngreso();
+  } catch (err) {
+    alert("❌ Error: " + err.message);
+  }
+};
+
+// ===== EDITAR EGRESO (modal) =====
+let idEgresoEnEdicion = null;
 
 window.editarEgreso = async function (id) {
   if (!esAdmin) return;
@@ -472,16 +529,59 @@ window.editarEgreso = async function (id) {
     if (!snap.exists()) { alert("❌ No encontrado"); return; }
     const d = snap.data();
 
-    const monto = prompt("Monto:", d.monto);
-    if (monto === null) return;
-    const descripcion = prompt("Descripción:", d.descripcion || "");
-    if (descripcion === null) return;
+    idEgresoEnEdicion = id;
 
-    await updateDoc(doc(db, "Egresos", id), {
-      monto: Number(monto), descripcion: descripcion.trim()
+    const select = document.getElementById("editEgresoConcepto");
+    const opciones = Array.from(select.options).map(o => o.value);
+    const grupoOtro = document.getElementById("editGrupoOtroConcepto");
+    if (opciones.includes(d.concepto)) {
+      select.value = d.concepto;
+      grupoOtro.style.display = d.concepto === "Otro" ? "block" : "none";
+      document.getElementById("editEgresoOtro").value = "";
+    } else {
+      // Concepto libre (guardado desde "Otro")
+      select.value = "Otro";
+      grupoOtro.style.display = "block";
+      document.getElementById("editEgresoOtro").value = d.concepto || "";
+    }
+
+    document.getElementById("editEgresoDescripcion").value = d.descripcion || "";
+
+    const montoInput = document.getElementById("editEgresoMonto");
+    montoInput.value = Number(d.monto || 0).toLocaleString("es-CO");
+    document.getElementById("editEgresoMontoValue").value = d.monto || 0;
+
+    document.getElementById("modalEditarEgreso").style.display = "flex";
+  } catch (err) { alert("❌ Error: " + err.message); }
+};
+
+window.cerrarModalEgreso = function () {
+  document.getElementById("modalEditarEgreso").style.display = "none";
+  idEgresoEnEdicion = null;
+};
+
+window.guardarEdicionEgreso = async function () {
+  if (!idEgresoEnEdicion) return;
+
+  let concepto = document.getElementById("editEgresoConcepto").value;
+  if (concepto === "Otro") {
+    concepto = document.getElementById("editEgresoOtro").value.trim();
+  }
+  const descripcion = document.getElementById("editEgresoDescripcion").value.trim();
+  const monto        = Number(document.getElementById("editEgresoMontoValue").value);
+
+  if (!concepto)  { alert("⚠️ Seleccione o escriba el concepto"); return; }
+  if (monto <= 0) { alert("⚠️ Ingrese un monto válido"); return; }
+
+  try {
+    await updateDoc(doc(db, "Egresos", idEgresoEnEdicion), {
+      concepto, descripcion, monto
     });
     alert("✅ Egreso actualizado");
-  } catch (err) { alert("❌ Error: " + err.message); }
+    window.cerrarModalEgreso();
+  } catch (err) {
+    alert("❌ Error: " + err.message);
+  }
 };
 
 // ===== ELIMINAR =====

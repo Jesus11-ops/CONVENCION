@@ -643,6 +643,40 @@ button {
   font-size: 0.95rem;
 }
 
+/* ===== MODAL EDITAR ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 25, 60, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: white;
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.modal-actions button { flex: 1; }
+
 /* ===== FOOTER ===== */
 footer {
   background: var(--azul);

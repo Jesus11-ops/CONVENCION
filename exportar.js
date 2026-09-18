@@ -35,7 +35,8 @@ const PRESUPUESTO_EGRESOS = {
 
 const PRESUPUESTO_INGRESOS = {
   "Aporte Zonal": 5000000, "Ofrendas": 6545000, "Aportes Pastores": 1900000,
-  "Culto Lanzamiento": 1000000, "Varios": 700000,
+  "Culto Lanzamiento": 1000000, "Donación Nacional": 0, "Aporte Congregación": 0,
+  "Donación": 0, "Varios": 700000,
 };
 
 window.exportarExcel = async function () {
