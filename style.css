@@ -344,7 +344,7 @@ header {
 
 .comp-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 120px;
+  grid-template-columns: 2fr 1fr 1fr 150px;
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
@@ -352,6 +352,21 @@ header {
   background: #f7f9fd;
   border: 1px solid var(--gris-borde);
   font-size: 0.88rem;
+}
+
+.progress-wrap-full {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  min-width: 38px;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .comp-row.header-row {
@@ -699,6 +714,7 @@ footer {
   .grid-2 { grid-template-columns: 1fr; }
   .comp-row { grid-template-columns: 1fr 1fr; font-size: 0.8rem; }
   .comp-row .progress-bar-wrap { display: none; }
+  .comp-row .progress-wrap-full { justify-content: flex-end; }
   .header-brand h1 { font-size: 1rem; }
   .registros-grid { grid-template-columns: 1fr; }
   .desglose-grid { grid-template-columns: repeat(2, 1fr); }

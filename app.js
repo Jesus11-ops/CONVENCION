@@ -288,15 +288,20 @@ function renderComparativoEgresos() {
       <div>Avance</div>
     </div>
     ${filas.map(f => {
-      const pct = f.ppto > 0 ? Math.min((f.real / f.ppto) * 100, 100) : 0;
-      const cls = pct < 75 ? "fill-ok" : pct < 100 ? "fill-over" : "fill-high";
+      const pctReal = f.ppto > 0 ? (f.real / f.ppto) * 100 : 0;
+      const pct = Math.min(pctReal, 100);
+      const cls = pctReal < 75 ? "fill-ok" : pctReal < 100 ? "fill-over" : "fill-high";
+      const pctLabel = f.ppto > 0 ? Math.round(pctReal) + "%" : "N/A";
       return `
         <div class="comp-row">
           <div class="comp-name">${f.concepto}</div>
           <div class="comp-num">${fmt(f.ppto)}</div>
           <div class="comp-real">${fmt(f.real)}</div>
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill ${cls}" style="width:${pct}%"></div>
+          <div class="progress-wrap-full">
+            <div class="progress-bar-wrap">
+              <div class="progress-bar-fill ${cls}" style="width:${pct}%"></div>
+            </div>
+            <span class="progress-pct">${pctLabel}</span>
           </div>
         </div>
       `;
