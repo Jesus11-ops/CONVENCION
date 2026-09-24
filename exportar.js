@@ -26,7 +26,7 @@ const ADMIN_EMAIL = "Adminconvencion@gmail.com";
 const PRESUPUESTO_EGRESOS = {
   "Gerencia General": 200000, "Gerencia Ejecutiva": 200000, "Gerencia Administrativa": 200000,
   "Predicadores": 2650000, "Sonido": 2200000, "Músicos Invitados": 1000000,
-  "Logística y Trasteo": 500000, "Alimentación": 2250000, "Publicidad y Decoración": 800000,
+  "Logística y Trasteo": 500000, "Alimentación": 2250000, "Publicidad y Decom": 800000,
   "Hotel": 50000, "Imprevistos": 1150000, "Relaciones Públicas": 500000,
   "Aseo": 450000, "SEPRI": 550000, "Electricidad": 300000,
   "Finanzas": 50000, "Silletería": 825000, "Espiritual": 70000,

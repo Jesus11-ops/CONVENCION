@@ -37,7 +37,7 @@ const PRESUPUESTO_EGRESOS = {
   "Músicos Invitados":     1000000,
   "Logística y Trasteo":    500000,
   "Alimentación":          2250000,
-  "Publicidad y Decoración":800000,
+  "Publicidad y Decom":800000,
   "Hotel":                   50000,
   "Imprevistos":           1150000,
   "Relaciones Públicas":    500000,
